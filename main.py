@@ -56,9 +56,11 @@ if __name__ == '__main__':
 
     trace_file_path = 'trace/' + 'Trace_' + str(inner_periods) + '_' + str(inner_variance) + '-' + str(no_file) + '_' + str(no_periodic) + '_' + str(round(time.time())) + '_event_trace.csv'
 
-    trace = Trace(trace_file_path, log=True)
+    trace = Trace(trace_file_path, log=False)
     simulation = Simulation(config, no_file, no_periodic, inner_periods, inner_variance, t_on, t_off, trace, seed)
 
     simulation.run()
     # Close files
     trace.close()
+    trace.plot_arrivals()
+    trace.show_plot()

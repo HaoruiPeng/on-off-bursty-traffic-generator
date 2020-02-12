@@ -1,6 +1,6 @@
 import numpy as np
 import scipy.stats as st
-
+import matplotlib.pyplot as plt
 
 class Trace:
 
@@ -37,37 +37,79 @@ class Trace:
             k = self.keys[i]
             self.Dict[k] = np.append(self.Dict[k], entry[k])
 
-    def write_queue_length(self, time_sp, queue_len):
-        self.queue_length = np.append(self.queue_length, np.array([[time_sp, queue_len]]), axis=0)
+    def plot_arrivals(self):
+        time = np.array([])
+        for i in range(len(self.Dict["arrival_time"])):
+            if self.Dict["mode"][i] is None:
+                time = np.append(time, self.Dict["arrival_time"][i])
 
-    def write_loss(self, time_sp, no_loss):
-        self.loss_trace = np.append(self.loss_trace, np.array([[time_sp, no_loss]]), axis=0)
+        end = time[-1]
+        arrival_per_ms = len(time)/end
+        arrivals = 0
+        index = 0
 
-    def write_waste(self, time_sp, no_waste):
-        self.waste_trace = np.append(self.waste_trace, np.array([[time_sp, no_waste]]), axis=0)
+        inter_arrivals = np.array([])
+        time_stamps = np.array([])
 
-    def write_decision(self, time_sp, decision):
-        self.decision_trace = np.append(self.decision_trace, np.array([[time_sp, decision]]), axis=0)
+        fig_1, axs_1 = plt.subplots(3,1,figsize=(12,12))
+        fig_2, axs_2 = plt.subplots(3,1,figsize=(12,12))
 
-    def get_arrivals(self):
-        request_array = self.Dict["arrival_time"]
-        arrivals = np.sort(request_array)
-        return arrivals
+        for t in np.arange(100, end+10, 100):
+            while index < len(time) and time[index] <= t:
+                arrivals += 1
+                index += 1
+            inter_arrivals = np.append(inter_arrivals, arrivals)
+            time_stamps = np.append(time_stamps, t)
+            arrivals = 0
+            if index >= len(time):
+                break
 
-    def get_departures(self):
-        departures = np.column_stack((self.Dict['departure_time'], self.Dict['pilot']))
-        return departures
+        axs_1[0].plot(time_stamps, inter_arrivals)
+        axs_1[0].axhline(arrival_per_ms*0.5, c="C3")
+        axs_2[0].plot(time_stamps, inter_arrivals/12)
+        axs_2[0].axhline(arrival_per_ms/24, c="C3")
 
-    def get_loss_rate(self, time):
-        urllc_loss = self.__get_urllc_loss(time)
-        return urllc_loss, 0
 
-    def __get_urllc_loss(self, time):
-        inds = np.where(self.Dict['departure_time'] <= time)
-        pilots = np.delete(self.Dict['pilot'], inds)
-        # print(len(pilots), len(self.Dict['pilot']))
-        loss_counter = 0
-        for ind in range(len(pilots)):
-            if not pilots[ind]:
-                loss_counter += 1
-        return loss_counter/len(pilots)
+        arrivals = 0
+        index = 0
+        inter_arrivals = np.array([])
+        time_stamps = np.array([])
+
+        for t in np.arange(500, end+50, 500):
+            while index < len(time) and time[index] <= t:
+                arrivals += 1
+                index += 1
+            inter_arrivals = np.append(inter_arrivals, arrivals)
+            time_stamps = np.append(time_stamps, t)
+            arrivals = 0
+            if index >= len(time):
+                break
+
+        axs_1[1].plot(time_stamps, inter_arrivals)
+        axs_1[1].axhline(arrival_per_ms*25, c="C3")
+        axs_2[1].plot(time_stamps, inter_arrivals/(24*25))
+        axs_2[1].axhline(arrival_per_ms/24, c="C3")
+
+
+        arrivals = 0
+        index = 0
+        inter_arrivals = np.array([])
+        time_stamps = np.array([])
+
+        for t in np.arange(1000, end+100, 1000):
+            while index < len(time) and time[index] <= t:
+                arrivals += 1
+                index += 1
+            inter_arrivals = np.append(inter_arrivals, arrivals)
+            time_stamps = np.append(time_stamps, t)
+            arrivals = 0
+            if index >= len(time):
+                break
+
+        axs_1[2].plot(time_stamps, inter_arrivals)
+        axs_1[2].axhline(arrival_per_ms*100,c="C3")
+        axs_2[2].plot(time_stamps, inter_arrivals/(24*100))
+        axs_2[2].axhline(arrival_per_ms/24,c="C3")
+
+    def show_plot(self):
+        plt.show()

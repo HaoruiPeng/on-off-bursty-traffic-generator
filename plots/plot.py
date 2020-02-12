@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 
 time = np.array([])
 nodes = [str(n) for n in range(100)]
+file_nodes = [str(n) for n in range(5)]
 Dict = dict((key, np.array([])) for key in nodes)
 with open("trace.csv", "r") as file:
     reader = csv.DictReader(file, delimiter=',')
@@ -16,6 +17,8 @@ with open("trace.csv", "r") as file:
             Dict[row["Node"]] = np.append(Dict[row["Node"]], float(row["Arrival"]))
 
 
+sim_length = 50000
+arrival_per_ms = len(time)/sim_length
 arrivals = 0
 index = 0
 end = time[-1]
@@ -35,13 +38,15 @@ for t in np.arange(0.5, end+0.5, 0.5):
         break
 
 axs_all[0].plot(time_stamps, inter_arrivals)
+axs_all[0].axhline(arrival_per_ms*0.5, c="C3")
+
 
 arrivals = 0
 index = 0
 inter_arrivals = np.array([])
 time_stamps = np.array([])
 
-for t in np.arange(1, end+1, 1):
+for t in np.arange(25, end+25, 25):
     while index < len(time) and time[index] <= t:
         arrivals += 1
         index += 1
@@ -51,13 +56,15 @@ for t in np.arange(1, end+1, 1):
     if index >= len(time):
         break
 axs_all[1].plot(time_stamps, inter_arrivals)
+axs_all[1].axhline(arrival_per_ms*25, c="C3")
+
 
 arrivals = 0
 index = 0
 inter_arrivals = np.array([])
 time_stamps = np.array([])
 
-for t in np.arange(25, end, 25):
+for t in np.arange(100, end+10, 100):
     while index < len(time) and time[index] <= t:
         arrivals += 1
         index += 1
@@ -67,6 +74,8 @@ for t in np.arange(25, end, 25):
     if index >= len(time):
         break
 axs_all[2].plot(time_stamps, inter_arrivals)
+axs_all[2].axhline(arrival_per_ms*100,c="C3")
+
 
 observes = [str(n) for n in [2, 4,1]]
 counter = 0
@@ -92,5 +101,6 @@ for key in observes:
 
     axs[counter].plot(time_stamps, inter_arrivals)
     counter += 1
+
 
 plt.show()
