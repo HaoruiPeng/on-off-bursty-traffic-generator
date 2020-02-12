@@ -56,9 +56,9 @@ class Simulation:
         sum = 0
         for p in periods:
             sum += 1/p*0.5
-        input(sum)
+        print(sum)
         # TODO: Here the traffic is canceled from taking new variables
-        self.Nodes = [FileNode(inner_periods, inner_variance, t_on, t_off)] * no_file + [PeriodicNode(p, inner_variance) for p in periods]
+        self.Nodes = [FileNode(inner_periods, inner_variance, t_on, t_off) for i in range(no_file)] + [PeriodicNode(p, inner_variance) for p in periods]
         #Decision : A dict with all the decisicion that the actuator look up every coherence interval
         #TODO:The initial number of users should follow the traffic distributtion of each slice
         node_index = 0
@@ -98,16 +98,23 @@ class Simulation:
         assert(event.mode == None)
         node_index = event.get_node()
         node = self.Nodes[node_index]
+        # if node.mode == self._ON:
+        #     print("[{}] packet arrival for node {}, node mode {} On".format(self.time, node_index, node_index))
+        # elif node.mode == self._OFF:
+        #     print("[{}] packet arrival for node {}, node {} mode OFF".format(self.time, node_index, node_index))
+        # else:
+        #     print("[{}] wrong node mode {}".format(self.time, node.mode))
+
         if node.node_type == self._FILE and node.mode == self._OFF:
             pass
         else:
-            node.push_event(event)
             entry = event.get_entry()
             self.trace.write_trace(entry)
+            print("write entry")
             next_arrival = node.packet_generator.get_next()
             self.event_heap.push(event.type,
                              self.time + next_arrival,
-                             event.node_id)
+                             event.get_node())
         del event
 #################################################################################################################
 ## Methods

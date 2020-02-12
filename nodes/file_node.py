@@ -34,7 +34,7 @@ class FileNode:
 
         self.request_queue = []
         self.node_type = self._FILE
-        self.arrival = "exponential"
+        self.arrival = "constant"
 
         self.mode = self._OFF
 
