@@ -31,12 +31,13 @@ class ModeSwitch:
             See class documentation
         alpha : [1, 2], the smaller alpha, the larger bursts
         d: minimum period
-
+        distribution: pareto or constant
         """
         self.alpha = 1.5
         self.d_on = d_on
         self.d_off = d_off
         self.init_mode = init_mode
+        self.distribution = "constant"
 
     def get_next(self, current_mode):
         """
@@ -51,8 +52,11 @@ class ModeSwitch:
             d = self.d_off
         if current_mode == self._ON:
             d = self.d_on
-        s = (np.random.pareto(self.alpha, 1) + 1) * d
 
+        if self.distribution == "pareto":
+            s = (np.random.pareto(self.alpha, 1) + 1) * d
+        if self.distribution == "constant":
+            s = [d]
         return s[0], 1 - current_mode
 
     def get_init(self):
@@ -63,5 +67,5 @@ class ModeSwitch:
         -------
         time of firt turn on, mode_on
         """
-        s = (np.random.pareto(self.alpha - 0.2, 1) + 1) * self.d_off
+        s = (np.random.pareto(self.alpha - 0.5, 1) + 1) * self.d_off
         return s[0], self._ON
