@@ -32,7 +32,7 @@ class Simulation:
     _ON = 1
     _OFF = 0
 
-    def __init__(self, config, no_file, no_periodic, inner_periods, inner_variance, t_on, t_off, trace, seed=None):
+    def __init__(self, config, no_file, no_periodic, inner_periods, inner_variance, t_on, t_off, distribution, trace, seed=None):
         """
         Initialize simulation object
 
@@ -58,7 +58,7 @@ class Simulation:
             sum += 1/p*0.5
         print(sum)
         # TODO: Here the traffic is canceled from taking new variables
-        self.Nodes = [FileNode(inner_periods, inner_variance, t_on, t_off) for i in range(no_file)] + [PeriodicNode(p, inner_variance) for p in periods]
+        self.Nodes = [FileNode(inner_periods, inner_variance, t_on, t_off, distribution) for i in range(no_file)] + [PeriodicNode(p, inner_variance) for p in periods]
         #Decision : A dict with all the decisicion that the actuator look up every coherence interval
         #TODO:The initial number of users should follow the traffic distributtion of each slice
         node_index = 0

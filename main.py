@@ -38,6 +38,7 @@ if __name__ == '__main__':
     parser.add_argument('--no_periodic', action="store", type=int, default=None)
     parser.add_argument('--no_file', action="store", type=int, default=None)
     parser.add_argument('--seed', action="store", type=int, default=None)
+    parser.add_argument('--distribution', action="store", default="constant")
 
     args = parser.parse_args()
     # print(args.scheduler)
@@ -50,14 +51,14 @@ if __name__ == '__main__':
     t_on = args.d_on
     t_off = args.d_off
     np.random.seed(seed)
-
+    distribution = args.distribution
     no_file = args.no_file
     no_periodic = args.no_periodic
 
     trace_file_path = 'trace/' + 'Trace_' + str(inner_periods) + '_' + str(inner_variance) + '-' + str(no_file) + '_' + str(no_periodic) + '_' + str(round(time.time())) + '_event_trace.csv'
 
     trace = Trace(trace_file_path, log=True)
-    simulation = Simulation(config, no_file, no_periodic, inner_periods, inner_variance, t_on, t_off, trace, seed)
+    simulation = Simulation(config, no_file, no_periodic, inner_periods, inner_variance, t_on, t_off, distribution, trace, seed)
 
     simulation.run()
     # Close files

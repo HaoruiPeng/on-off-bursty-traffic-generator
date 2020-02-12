@@ -30,7 +30,7 @@ class FileNode:
     _SPORADIC = 2
 
     # the nodes generator the event periodically
-    def __init__(self, period_inner, variance_inner, d_on, d_off):
+    def __init__(self, period_inner, variance_inner, d_on, d_off, distribution):
 
         self.request_queue = []
         self.node_type = self._FILE
@@ -39,7 +39,7 @@ class FileNode:
         self.mode = self._OFF
 
         self.packet_generator = PacketGenerator(self.arrival, (period_inner, variance_inner))
-        self.mode_switch = ModeSwitch(self.mode, d_on, d_off)
+        self.mode_switch = ModeSwitch(self.mode, d_on, d_off, distribution)
 
     def get_type(self):
         return self.node_type

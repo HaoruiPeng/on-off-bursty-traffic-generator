@@ -21,7 +21,7 @@ class ModeSwitch:
     _OFF = 0
     _ON = 1
 
-    def __init__(self, init_mode, d_on, d_off):
+    def __init__(self, init_mode, d_on, d_off, distribution):
         """
         Initializes a new event generator. See class documentation for parameters explanation.
 
@@ -37,7 +37,7 @@ class ModeSwitch:
         self.d_on = d_on
         self.d_off = d_off
         self.init_mode = init_mode
-        self.distribution = "constant"
+        self.distribution = distribution
 
     def get_next(self, current_mode):
         """
