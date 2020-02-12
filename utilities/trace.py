@@ -44,7 +44,10 @@ class Trace:
                 time = np.append(time, self.Dict["arrival_time"][i])
 
         end = time[-1]
+        print("simulation length: {}".format(end))
+        print("total arrival: {}".format(len(time)))
         arrival_per_ms = len(time)/end
+        print(arrival_per_ms)
         arrivals = 0
         index = 0
 
@@ -54,7 +57,7 @@ class Trace:
         fig_1, axs_1 = plt.subplots(3,1,figsize=(12,12))
         fig_2, axs_2 = plt.subplots(3,1,figsize=(12,12))
 
-        for t in np.arange(100, end+10, 100):
+        for t in np.arange(0.5, end+0.5, 0.5):
             while index < len(time) and time[index] <= t:
                 arrivals += 1
                 index += 1
@@ -75,7 +78,7 @@ class Trace:
         inter_arrivals = np.array([])
         time_stamps = np.array([])
 
-        for t in np.arange(500, end+50, 500):
+        for t in np.arange(10, end+5, 10):
             while index < len(time) and time[index] <= t:
                 arrivals += 1
                 index += 1
@@ -86,8 +89,8 @@ class Trace:
                 break
 
         axs_1[1].plot(time_stamps, inter_arrivals)
-        axs_1[1].axhline(arrival_per_ms*25, c="C3")
-        axs_2[1].plot(time_stamps, inter_arrivals/(24*25))
+        axs_1[1].axhline(arrival_per_ms*10, c="C3")
+        axs_2[1].plot(time_stamps, inter_arrivals/(24*10))
         axs_2[1].axhline(arrival_per_ms/24, c="C3")
 
 
@@ -96,7 +99,7 @@ class Trace:
         inter_arrivals = np.array([])
         time_stamps = np.array([])
 
-        for t in np.arange(1000, end+100, 1000):
+        for t in np.arange(100, end+10, 100):
             while index < len(time) and time[index] <= t:
                 arrivals += 1
                 index += 1
